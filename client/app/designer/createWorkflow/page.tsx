@@ -11,7 +11,7 @@ import FormLabel from '@mui/material/FormLabel';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
 import Chip from '@mui/material/Chip';
@@ -43,7 +43,8 @@ export default function CreateWorkFlow() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [bpmnModeler, setBpmnModeler] = useState<any>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  // const router = useRouter();
+  const router = useRouter();
+  
   interface FormData {
     created: string; // ISO string representation of a date
     xmlCode: string;
@@ -73,54 +74,13 @@ export default function CreateWorkFlow() {
     console.log('Component mounted');
   }, []);
   
-  
-
   useEffect(() => {
     console.log('bpmnModeler changed:', bpmnModeler);
   }, [bpmnModeler]);
+
   const [createDesign, { data, error, loading }] = useMutation(CREATE_DESIGN);
   
-  // const handlePublish = useCallback(async () => {
-  //   console.log('Publish button clicked');
-  //   console.log('bpmnModeler in handlePublish:', bpmnModeler);
-  //   if (bpmnModeler && typeof bpmnModeler.getXML === 'function') {
-  //     try {
-  //       const xml = await bpmnModeler.getXML();
-      
-      
-  //       console.log('XML retrieved:', data);
-  //       const input = {
-  //         created: formData.created,
-  //         xmlCode: formData.xmlCode,
-  //         workflowName: formData.workflowName,
-  //         description: formData.description,
-  //         category: formData.category,
-  //         processMap: formData.processMap,
-  //         formSelection: formData.formSelection,
-  //         addToProject: formData.addToProject,
-  //       };
-  
-  //       // Call the mutation
-  //       const response = await createDesign({ variables: { input } });
-  
-
-  //       if (response.ok) {
-  //         alert('Diagram saved successfully!');
-  //       } else {
-  //         throw new Error('Failed to save diagram');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error saving diagram:', error);
-  //       alert('Failed to save diagram. Please try again.');
-  //     }
-  //   } else {
-  //     console.error('BPMN modeler is not available or getXML is not a function');
-  //     alert('The diagram is not ready yet. Please try again in a moment.');
-  //   }
-  // }, [bpmnModeler]);;
-  const router = useRouter();
   const handlePublish = useCallback(async () => {
-    
     console.log('Publish button clicked');
     console.log('bpmnModeler in handlePublish:', bpmnModeler);
     
@@ -189,11 +149,11 @@ export default function CreateWorkFlow() {
     setFormSubmitted(true);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>) => {
     const { name, value } = event.target;
     setFormData(prevData => ({
       ...prevData,
-      [name as string]: value
+      [name]: value
     }));
   };
 

@@ -9,82 +9,47 @@ import { useQuery } from '@apollo/client';
 import Link from 'next/link';
 import { GET_DESIGN } from '../api/design/queries';
 import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import Menu from '@mui/material/Menu';
 import { useRouter } from 'next/router';
 import MenuItem from '@mui/material/MenuItem';
 import OptionsRenderer from '../component/editModalBpmp/OptionsRenderer';
+
 const BPMNDiagram = dynamic(() => import('../component/bpmn/bpmn'), {
   ssr: false
 });
 
-const arrayRenderer = (params:any) => {
+interface RowData {
+  workflowName: string;
+  category: string;
+  created: string;
+  description: string;
+  processMap: string;
+  formSelection: string[];
+  addToProject: string[];
+  workflowId: string;
+  xmlCode: string;
+}
+
+const arrayRenderer = (params: { value: string[] }) => {
   return params.value ? params.value.join(', ') : '';
 };
 
-const dateRenderer = (params:any) => {
+const dateRenderer = (params: { value: string }) => {
   return params.value ? new Date(params.value).toLocaleString() : '';
 };
 
 export default function Designer() {
   const { data, loading, error } = useQuery(GET_DESIGN);
+  const router = useRouter();
 
-  const serialNumberRenderer = (params:any) => {
+  const serialNumberRenderer = (params: any) => {
     return params.node.rowIndex + 1;
   };
-  
-  // const OptionsRenderer = (props:any) => {
-  //   const router = useRouter();
-  //   const [anchorEl, setAnchorEl] = React.useState(null);
-  
-  //   const handleClick = (event:any) => {
-  //     setAnchorEl(event.currentTarget);
-  //   };
-  
-  //   const handleClose = () => {
-  //     setAnchorEl(null);
-  //   };
-  
-  //   const handleEdit = () => {
-      
-  //     console.log('Edit clicked for:', props.data.workflowId);
-  //     const objectToPass = { id:props.data.workflowId,code:props.data.xmlCode  };
-  //     router.push({
-  //       pathname: '/editWorkflow',
-  //       query: { data: JSON.stringify(objectToPass) }
-  //   });
-  //     handleClose();
-  //   };
-  
-  //   const handleDelete = () => {
-  //     console.log('Delete clicked for:', props.data.workflowId);
-  //     handleClose();
-  //   };
-  
-  //   return (
-  //     <div>
-  //       <Button onClick={handleClick}>Options</Button>
-  //       <Menu
-  //         anchorEl={anchorEl}
-  //         open={Boolean(anchorEl)}
-  //         onClose={handleClose}
-  //       >
-  //         <MenuItem onClick={handleEdit}>Open Launchpad</MenuItem>
-  //         <MenuItem onClick={handleDelete}>Open in Modeler</MenuItem>
-  //         <MenuItem onClick={handleDelete}>Save as Template</MenuItem>
-  //         <MenuItem onClick={handleEdit}>Save as PM Block</MenuItem>
-  //         <MenuItem onClick={handleDelete}>Add to Project</MenuItem>
-  //         <MenuItem onClick={handleDelete}>Configure</MenuItem>
-  //         <MenuItem onClick={handleDelete}>Delete</MenuItem>
-  //       </Menu>
-  //     </div>
-  //   );
-  // };
 
-
-
-  const [columnDefs] = useState([
+  const [columnDefs] = useState<ColDef<RowData>[]>([
     { 
       headerName: 'S.No', 
       cellRenderer: serialNumberRenderer,
@@ -101,14 +66,14 @@ export default function Designer() {
     { field: 'addToProject', headerName: 'Added To Projects', sortable: true, filter: true, cellRenderer: arrayRenderer },
     {
       headerName: 'Options',
-      cellRenderer: OptionsRenderer,
+      cellRenderer: 'optionsRenderer',
       sortable: false,
       filter: false,
       width: 120
     }
   ]);
 
-  const [rowData, setRowData] = useState([]);
+  const [rowData, setRowData] = useState<RowData[]>([]);
 
   useEffect(() => {
     if (data && data.getDesigns) {
@@ -121,8 +86,8 @@ export default function Designer() {
 
   return (
     <Box style={{paddingLeft:"2%", paddingTop:"2%"}}>
-             <h1>Work Flow List</h1>
-       <Box style={{display:"flex", gap:"2%", marginBottom: "20px"}}>
+      <h1>Work Flow List</h1>
+      <Box style={{display:"flex", gap:"2%", marginBottom: "20px"}}>
         <TextField 
           sx={{width:"75%"}} 
           id="search" 
@@ -136,7 +101,7 @@ export default function Designer() {
       </Box>
 
       <div className="ag-theme-alpine" style={{height: 600, width: '100%'}}>
-        <AgGridReact
+        <AgGridReact<RowData>
           columnDefs={columnDefs}
           rowData={rowData}
           pagination={true}

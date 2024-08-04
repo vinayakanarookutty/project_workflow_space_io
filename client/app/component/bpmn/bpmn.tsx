@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Modeler from 'bpmn-js/lib/Modeler';
-
+import Canvas from 'diagram-js/lib/core/Canvas';
 interface BPMNDiagramProps {
   bpmnXML: string;
   setModeler: React.Dispatch<React.SetStateAction<any>>;
@@ -25,7 +25,7 @@ const BPMNDiagram: React.FC<BPMNDiagramProps> = ({ bpmnXML, setModeler }) => {
       try {
         console.log('Importing XML');
         await modeler.importXML(bpmnXML);
-        const canvas = modeler.get('canvas');
+        const canvas:Canvas = modeler.get('canvas');
         canvas.zoom('fit-viewport');
         console.log('XML imported successfully');
       } catch (err) {
