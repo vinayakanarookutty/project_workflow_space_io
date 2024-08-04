@@ -1,0 +1,6 @@
+{
+    "projects": {
+      "frontend": "apps/client",
+      "backend": "apps/backend"
+    }
+  }
