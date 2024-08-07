@@ -12,14 +12,10 @@ import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import Menu from '@mui/material/Menu';
 import { useRouter } from 'next/router';
-import MenuItem from '@mui/material/MenuItem';
 import OptionsRenderer from '../component/editModalBpmp/OptionsRenderer';
 
-const BPMNDiagram = dynamic(() => import('../component/bpmn/bpmn'), {
-  ssr: false
-});
+
 
 interface RowData {
   workflowName: string;
@@ -43,7 +39,7 @@ const dateRenderer = (params: { value: string }) => {
 
 export default function Designer() {
   const { data, loading, error } = useQuery(GET_DESIGN);
-  const router = useRouter();
+ 
 
   const serialNumberRenderer = (params: any) => {
     return params.node.rowIndex + 1;
@@ -107,7 +103,7 @@ export default function Designer() {
           pagination={true}
           paginationPageSize={10}
           domLayout='autoHeight'
-          frameworkComponents={{
+          components={{
             optionsRenderer: OptionsRenderer
           }}
         />
