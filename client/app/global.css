@@ -1,0 +1,38 @@
+html,
+body {
+   padding: 0;
+   margin: 0;
+   font-family: 'Inter', sans-serif;
+}
+
+* {
+   box-sizing: border-box;
+}
+
+.ag-theme-quartz {
+   --ag-header-height: 30px;
+   --ag-header-foreground-color: white;
+   --ag-header-background-color: black;
+   --ag-header-cell-hover-background-color: rgb(80, 40, 140);
+   --ag-header-cell-moving-background-color: rgb(80, 40, 140);
+}
+
+.ag-root .ag-body .ag-row {
+   border: none;
+ }
+ 
+ .ag-theme-quartz .ag-header {
+   border-bottom: none;
+   border-radius: 12px;
+   background: var(--nextui-colors-accents0);
+ }
+ 
+ .ag-header-cell {
+   border-right: none;
+ }
+
+ .ag-theme-quartz .ag-root-wrapper{
+   border: none;
+ }
+ @import '~bpmn-js/dist/assets/diagram-js.css';
+ @import '~bpmn-js/dist/assets/bpmn-font/css/bpmn.css';
